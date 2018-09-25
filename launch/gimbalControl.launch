@@ -1,0 +1,13 @@
+<launch>
+	<!-- joy node -->
+	<node respawn="true" pkg="joy" type="joy_node" name="joy_node" output="screen"/>
+	
+	<!-- Gimbal control Node -->
+	<node pkg="dji_gimbal_control" type="dji_gimbal_control" name="dji_gimbal_control" output="screen">
+		<param name="yaw_axis" type="int" value="0"/>
+		<param name="pitch_axis" type="int" value="4"/>
+		<param name="roll_axis" type="int" value="3"/>
+		<param name="reset_angle_btn" type="int" value="0"/>
+		<param name="face_down_btn" type="int" value="2"/>
+	</node>
+</launch>
