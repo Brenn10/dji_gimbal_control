@@ -94,7 +94,7 @@ void dji_gimbal_control::joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 
 int main(int argc, char** argv)
 {
-	ros::init(argc, argv, "dji_gimbal_control");
+	ros::init(argc, argv, "dji_gimbal_control_node");
 	ros::NodeHandle nh;
 
 	dji_gimbal_control gimbalControl(nh);
