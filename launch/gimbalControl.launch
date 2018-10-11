@@ -4,10 +4,13 @@
 	
 	<!-- Gimbal control Node -->
 	<node pkg="dji_gimbal_control" type="dji_gimbal_control_node" name="dji_gimbal_control" output="screen">
+		<param name="track_tag" type="bool" value="true"/>
+		<param name="camera_info_topic" type="str" value="/dji_camera/camera_info"/>
 		<param name="yaw_axis" type="int" value="0"/>
 		<param name="pitch_axis" type="int" value="4"/>
 		<param name="roll_axis" type="int" value="3"/>
 		<param name="reset_angle_btn" type="int" value="0"/>
 		<param name="face_down_btn" type="int" value="2"/>
+		<param name="toggle_track_btn" type="int" value="3"/>
 	</node>
 </launch>
