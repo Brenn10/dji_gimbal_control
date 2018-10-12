@@ -53,8 +53,15 @@ void dji_gimbal_control::publishGimbalCmd()
 		speedCmd.vector.x = 0;
 		speedCmd.vector.y = -tagY / invKp > velT ? velT : -tagY / invKp < -velT ? -velT : -tagY / invKp;
 		speedCmd.vector.z = tagX / invKp > velT ? velT : tagX / invKp < -velT ? -velT : tagX / invKp;
+
+		gimbalSpeedPub.publish(speedCmd);
+
+		// Reset Commands to zero
+		speedCmd.vector.y = 0;
+		speedCmd.vector.z = 0;
 	}
-	gimbalSpeedPub.publish(speedCmd);
+	else
+		gimbalSpeedPub.publish(speedCmd);
 }
 
 void dji_gimbal_control::resetGimbalAngle()
