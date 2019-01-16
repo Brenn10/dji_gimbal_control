@@ -53,6 +53,7 @@ private:
 
 	bool trackTag;
 	std::string cameraInfoTopic;
+	std::string tagPoseTopic;
 	int yawAxis, pitchAxis, rollAxis, resetButton, faceDownButton, toggleButton;
 	geometry_msgs::Vector3Stamped gimbalAngle;
 	geometry_msgs::Vector3Stamped speedCmd;

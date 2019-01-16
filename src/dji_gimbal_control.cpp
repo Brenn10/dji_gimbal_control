@@ -13,7 +13,7 @@ dji_gimbal_control::dji_gimbal_control(ros::NodeHandle& nh)
 	gimbalAngleSub = nh.subscribe<geometry_msgs::Vector3Stamped>("/dji_sdk/gimbal_angle", 10, &dji_gimbal_control::gimbalAngleCallback, this);
 	joySub = nh.subscribe("/joy", 10, &dji_gimbal_control::joyCallback, this);
 	cameraInfoSub = nh.subscribe(cameraInfoTopic, 10, &dji_gimbal_control::cameraInfoCallback, this);
-	tagPoseSub = nh.subscribe("/ar_pose_marker", 10, &dji_gimbal_control::tagCallback, this);
+	tagPoseSub = nh.subscribe(tagPoseTopic, 10, &dji_gimbal_control::tagCallback, this);
 
 	// Setup Publishers
 	gimbalSpeedPub = nh.advertise<geometry_msgs::Vector3Stamped>("/dji_sdk/gimbal_speed_cmd", 10);
@@ -28,6 +28,7 @@ void dji_gimbal_control::initializeParam()
 	// Load values from launch file
 	nh_private.param("track_tag", trackTag, false);
 	nh_private.param("camera_info_topic", cameraInfoTopic, std::string("/dji_camera/camera_info"));
+	nh_private.param("tag_pose_topic", tagPoseTopic, std::string("/ar_pose_marker"));
 	nh_private.param("yaw_axis", yawAxis, 0);
 	nh_private.param("pitch_axis", pitchAxis, 4);
 	nh_private.param("roll_axis", rollAxis, 3);
@@ -157,7 +158,7 @@ int main(int argc, char** argv)
 
 	dji_gimbal_control gimbalControl(nh);
 
-	ros::Rate rate(10);
+	ros::Rate rate(30);
 
 	while(ros::ok())
 	{
