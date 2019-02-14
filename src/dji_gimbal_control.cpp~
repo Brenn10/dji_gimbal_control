@@ -60,7 +60,7 @@ void dji_gimbal_control::publishGimbalCmd()
 		speedCmd.vector.x = 0;
 		//corrections in x,y
 		double cx,cy;
-		cx = tagX * Kp - (lastX-tagX)*Kd;
+		cx = tagX * Kp + (lastX-tagX)*Kd;
 		cy = -tagY * Kp+ (lastY-tagY)*Kd;
 		//crop if outside range
 		cx = cx>velT ? velT : (cx<-velT ? -velT : cx);

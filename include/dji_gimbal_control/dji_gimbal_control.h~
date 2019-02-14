@@ -57,7 +57,7 @@ private:
 	// Data
 	bool tagFound;
 	double fx, fy;
-	double lastX,lastY;
+	double last_x,last_y;
 	double velT, Kp,Kd;
 	double tagX, tagY;
 

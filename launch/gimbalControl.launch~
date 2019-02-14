@@ -14,6 +14,6 @@
 		<param name="face_down_btn" type="int" value="2"/>
 		<param name="toggle_track_btn" type="int" value="3"/>
 		<param name="Kp" type="double" value=".002"/>
-		<param name="Kd" type="double" value="0.0005"/>
+		<param name="Kd" type="double" value="0.005"/>
 	</node>
 </launch>

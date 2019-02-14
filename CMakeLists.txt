@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   dji_sdk
   geometry_msgs
   sensor_msgs
+  std_srvs
   roscpp
 )
 
