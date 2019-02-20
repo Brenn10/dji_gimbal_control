@@ -12,6 +12,8 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Joy.h>
 
+#include "dji_gimbal_control/SetBoolean.h"
+
 #define C_PI (double)3.141592653589793
 #define DEG2RAD(DEG) ((DEG) * ((C_PI) / (180.0)))
 #define RAD2DEG(RAD) ((RAD) * (180.0) / (C_PI))
@@ -38,6 +40,7 @@ private:
 	// Services
 	ros::ServiceServer facedownServ;
 	ros::ServiceServer faceupServ;
+	ros::ServiceServer setTrackingServ;
 
 	// Callbacks
 	void gimbalAngleCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg);
@@ -48,6 +51,7 @@ private:
 	// Service Callbacks
 	bool facedownCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);	
 	bool faceupCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
+	bool setTrackingCallback(dji_gimbal_control::setBoolean::Request &req, std_srvs::Trigger::Response &res);
 
 	// Functions
 	void initializeParam();

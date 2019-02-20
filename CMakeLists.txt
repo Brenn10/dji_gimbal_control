@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   ar_track_alvar
   dji_sdk
   geometry_msgs
+  message_generation
   sensor_msgs
   std_srvs
   roscpp
@@ -18,6 +19,16 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 find_package(DJIOSDK REQUIRED)
+
+add_service_files(DIRECTORY srv
+  FILES
+  SetBoolean.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -31,7 +42,7 @@ find_package(DJIOSDK REQUIRED)
 catkin_package(
 	INCLUDE_DIRS include
 	LIBRARIES dji_gimbal_control
-	CATKIN_DEPENDS dji_sdk geometry_msgs roscpp
+	CATKIN_DEPENDS dji_sdk geometry_msgs roscpp message_runtime
 	DEPENDS system_lib
 )
 
@@ -40,14 +51,14 @@ catkin_package(
 ###########
 
 include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
+	include
+	${catkin_INCLUDE_DIRS}
+	)
+	
 add_executable(dji_gimbal_control_node
 	src/dji_gimbal_control.cpp
 	)
-	
+
 target_link_libraries(dji_gimbal_control_node
 	${catkin_LIBRARIES}
 	${DJIOSDK_LIBRARIES}

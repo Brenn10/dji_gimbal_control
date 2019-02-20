@@ -22,6 +22,7 @@ dji_gimbal_control::dji_gimbal_control(ros::NodeHandle& nh)
 	// Setup Services
 	facedownServ = nh.advertiseService("facedown", &dji_gimbal_control::facedownCallback, this);
 	faceupServ = nh.advertiseService("faceup", &dji_gimbal_control::faceupCallback, this);
+	setTrackingServ = nh.advertiseService("setGimbalTracking", &dji_gimbal_control::setTrackingCallback, this);
 }
 
 void dji_gimbal_control::initializeParam()
@@ -119,7 +120,6 @@ void dji_gimbal_control::joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 	// Toggle track flag
 	if (msg->buttons[toggleButton] == 1)
 		trackTag = !trackTag;
-
 	if (msg->buttons[resetButton] == 1)
 		resetGimbalAngle();
 	else if (msg->buttons[faceDownButton] == 1)
@@ -159,15 +159,24 @@ void dji_gimbal_control::tagCallback(const ar_track_alvar_msgs::AlvarMarkers& ms
 		tagFound = false;
 }
 
-bool dji_gimbal_control::facedownCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+bool dji_gimbal_control::facedownCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
+{
 	faceDownwards();
-	res.success=true;
+	res.success = true;
 	return true;
 }
 
-bool dji_gimbal_control::faceupCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+bool dji_gimbal_control::faceupCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
+{
 	resetGimbalAngle();
-	res.success=true;
+	res.success = true;
+	return true;
+}
+
+bool dji_gimbal_control::toggleTrackingCallback(dji_gimbal_control::setBoolean::Request &req, std_srvs::Trigger::Response &res)
+{
+	trackTag = req.data;
+	res.success = true;
 	return true;
 }
 
