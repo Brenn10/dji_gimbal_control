@@ -56,8 +56,10 @@ include_directories(
 	)
 	
 add_executable(dji_gimbal_control_node
-	src/dji_gimbal_control.cpp
+	src/dji_gimbal_controller.cpp
 	)
+
+add_dependencies(dji_gimbal_control_node ${catkin_EXPORTED_TARGETS} )
 
 target_link_libraries(dji_gimbal_control_node
 	${catkin_LIBRARIES}

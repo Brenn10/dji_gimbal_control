@@ -1,31 +1,31 @@
-#include "dji_gimbal_control/dji_gimbal_control.h"
+#include "dji_gimbal_control/dji_gimbal_controller.h"
 
 #include <unistd.h>
 
 #include <iostream>
 
-dji_gimbal_control::dji_gimbal_control(ros::NodeHandle& nh)
+dji_gimbal_controller::dji_gimbal_controller(ros::NodeHandle& nh)
 {
 	// Configure the gimbal control parameters
 	initializeParam();
 
 	// Setup Subscribers
-	gimbalAngleSub = nh.subscribe<geometry_msgs::Vector3Stamped>("/dji_sdk/gimbal_angle", 10, &dji_gimbal_control::gimbalAngleCallback, this);
-	joySub = nh.subscribe("joy", 10, &dji_gimbal_control::joyCallback, this);
-	cameraInfoSub = nh.subscribe(cameraInfoTopic, 10, &dji_gimbal_control::cameraInfoCallback, this);
-	tagPoseSub = nh.subscribe(tagPoseTopic, 10, &dji_gimbal_control::tagCallback, this);
+	gimbalAngleSub = nh.subscribe<geometry_msgs::Vector3Stamped>("/dji_sdk/gimbal_angle", 10, &dji_gimbal_controller::gimbalAngleCallback, this);
+	joySub = nh.subscribe("joy", 10, &dji_gimbal_controller::joyCallback, this);
+	cameraInfoSub = nh.subscribe(cameraInfoTopic, 10, &dji_gimbal_controller::cameraInfoCallback, this);
+	tagPoseSub = nh.subscribe(tagPoseTopic, 10, &dji_gimbal_controller::tagCallback, this);
 
 	// Setup Publishers
 	gimbalSpeedPub = nh.advertise<geometry_msgs::Vector3Stamped>("/dji_sdk/gimbal_speed_cmd", 10);
 	gimbalAnglePub = nh.advertise<dji_sdk::Gimbal>("/dji_sdk/gimbal_angle_cmd", 10);
 	
 	// Setup Services
-	facedownServ = nh.advertiseService("facedown", &dji_gimbal_control::facedownCallback, this);
-	faceupServ = nh.advertiseService("faceup", &dji_gimbal_control::faceupCallback, this);
-	setTrackingServ = nh.advertiseService("setGimbalTracking", &dji_gimbal_control::setTrackingCallback, this);
+	facedownServ = nh.advertiseService("facedown", &dji_gimbal_controller::facedownCallback, this);
+	faceupServ = nh.advertiseService("faceup", &dji_gimbal_controller::faceupCallback, this);
+	setTrackingServ = nh.advertiseService("setGimbalTracking", &dji_gimbal_controller::setTrackingCallback, this);
 }
 
-void dji_gimbal_control::initializeParam()
+void dji_gimbal_controller::initializeParam()
 {
 	// Create private nodeHandle to read the launch file
 	ros::NodeHandle nh_private("~");
@@ -54,7 +54,7 @@ void dji_gimbal_control::initializeParam()
 	lastX=lastY=0;
 }
 
-void dji_gimbal_control::publishGimbalCmd()
+void dji_gimbal_controller::publishGimbalCmd()
 {
 	if (trackTag && tagFound)
 	{
@@ -80,7 +80,7 @@ void dji_gimbal_control::publishGimbalCmd()
 		gimbalSpeedPub.publish(speedCmd);
 }
 
-void dji_gimbal_control::resetGimbalAngle()
+void dji_gimbal_controller::resetGimbalAngle()
 {
 	// Prepare the reset command
 	dji_sdk::Gimbal angleCmd;
@@ -96,7 +96,7 @@ void dji_gimbal_control::resetGimbalAngle()
 	sleep(2);
 }
 
-void dji_gimbal_control::faceDownwards()
+void dji_gimbal_controller::faceDownwards()
 {
 	// Prepare the angle command
 	dji_sdk::Gimbal angleCmd;
@@ -111,11 +111,11 @@ void dji_gimbal_control::faceDownwards()
 }
 
 // Callbacks
-void dji_gimbal_control::gimbalAngleCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
+void dji_gimbal_controller::gimbalAngleCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
 	gimbalAngle = *msg;
 }
 
-void dji_gimbal_control::joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
+void dji_gimbal_controller::joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 {
 	// Toggle track flag
 	if (msg->buttons[toggleButton] == 1)
@@ -133,14 +133,14 @@ void dji_gimbal_control::joyCallback(const sensor_msgs::Joy::ConstPtr& msg)
 	}
 }
 
-void dji_gimbal_control::cameraInfoCallback(const sensor_msgs::CameraInfo& msg)
+void dji_gimbal_controller::cameraInfoCallback(const sensor_msgs::CameraInfo& msg)
 {
 	// Get the focal length of the camera
 	fx = msg.K[0];
 	fy = msg.K[4];
 }
 
-void dji_gimbal_control::tagCallback(const ar_track_alvar_msgs::AlvarMarkers& msg)
+void dji_gimbal_controller::tagCallback(const ar_track_alvar_msgs::AlvarMarkers& msg)
 {
 	if(!msg.markers.empty())
 	{
@@ -159,21 +159,21 @@ void dji_gimbal_control::tagCallback(const ar_track_alvar_msgs::AlvarMarkers& ms
 		tagFound = false;
 }
 
-bool dji_gimbal_control::facedownCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
+bool dji_gimbal_controller::facedownCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
 {
 	faceDownwards();
 	res.success = true;
 	return true;
 }
 
-bool dji_gimbal_control::faceupCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
+bool dji_gimbal_controller::faceupCallback(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
 {
 	resetGimbalAngle();
 	res.success = true;
 	return true;
 }
 
-bool dji_gimbal_control::toggleTrackingCallback(dji_gimbal_control::setBoolean::Request &req, std_srvs::Trigger::Response &res)
+bool dji_gimbal_controller::setTrackingCallback(dji_gimbal_control::SetBoolean::Request &req, std_srvs::Trigger::Response &res)
 {
 	trackTag = req.data;
 	res.success = true;
@@ -189,7 +189,7 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "dji_gimbal_control_node");
 	ros::NodeHandle nh;
 
-	dji_gimbal_control gimbalControl(nh);
+	dji_gimbal_controller gimbalControl(nh);
 
 	ros::Rate rate(30);
 

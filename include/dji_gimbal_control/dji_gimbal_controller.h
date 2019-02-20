@@ -1,5 +1,5 @@
-#ifndef DJI_GIMBAL_CONTROL_H
-#define DJI_GIMBAL_CONTROL_H
+#ifndef DJI_GIMBAL_CONTROLLER_H
+#define DJI_GIMBAL_CONTROLLER_H
 
 // DJI SDK includes
 #include <dji_sdk/Gimbal.h>
@@ -12,14 +12,16 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Joy.h>
 
+#include "dji_gimbal_control/SetBoolean.h"
+
 #define C_PI (double)3.141592653589793
 #define DEG2RAD(DEG) ((DEG) * ((C_PI) / (180.0)))
 #define RAD2DEG(RAD) ((RAD) * (180.0) / (C_PI))
 
-class dji_gimbal_control {
+class dji_gimbal_controller {
 public:
-	dji_gimbal_control(ros::NodeHandle& nh);
-	~dji_gimbal_control(){};
+	dji_gimbal_controller(ros::NodeHandle& nh);
+	~dji_gimbal_controller(){};
 
 	// Publish commands
 	void publishGimbalCmd();
@@ -38,6 +40,7 @@ private:
 	// Services
 	ros::ServiceServer facedownServ;
 	ros::ServiceServer faceupServ;
+	ros::ServiceServer setTrackingServ;
 
 	// Callbacks
 	void gimbalAngleCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg);
@@ -48,6 +51,7 @@ private:
 	// Service Callbacks
 	bool facedownCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);	
 	bool faceupCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
+	bool setTrackingCallback(dji_gimbal_control::SetBoolean::Request &req, std_srvs::Trigger::Response &res);
 
 	// Functions
 	void initializeParam();
@@ -57,7 +61,7 @@ private:
 	// Data
 	bool tagFound;
 	double fx, fy;
-	double last_x,last_y;
+	double lastX,lastY;
 	double velT, Kp,Kd;
 	double tagX, tagY;
 
