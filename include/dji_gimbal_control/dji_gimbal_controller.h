@@ -12,7 +12,7 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Joy.h>
 
-#include "dji_gimbal_control/SetBoolean.h"
+#include "std_srvs/SetBool.h"
 
 #define C_PI (double)3.141592653589793
 #define DEG2RAD(DEG) ((DEG) * ((C_PI) / (180.0)))
@@ -51,7 +51,7 @@ private:
 	// Service Callbacks
 	bool facedownCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);	
 	bool faceupCallback(std_srvs::Trigger::Request &req,std_srvs::Trigger::Response &res);
-	bool setTrackingCallback(dji_gimbal_control::SetBoolean::Request &req, std_srvs::Trigger::Response &res);
+	bool setTrackingCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
 
 	// Functions
 	void initializeParam();

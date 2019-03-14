@@ -20,16 +20,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## System dependencies are found with CMake's conventions
 find_package(DJIOSDK REQUIRED)
 
-add_service_files(DIRECTORY srv
-  FILES
-  SetBoolean.srv
-)
-
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
-
 ###################################
 ## catkin specific configuration ##
 ###################################

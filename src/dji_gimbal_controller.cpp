@@ -173,7 +173,7 @@ bool dji_gimbal_controller::faceupCallback(std_srvs::Trigger::Request &req, std_
 	return true;
 }
 
-bool dji_gimbal_controller::setTrackingCallback(dji_gimbal_control::SetBoolean::Request &req, std_srvs::Trigger::Response &res)
+bool dji_gimbal_controller::setTrackingCallback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
 {
 	trackTag = req.data;
 	res.success = true;
